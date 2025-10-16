@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Rail Clock</title>
+		<meta name="theme-color" content="#000000">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="favicon.svg"/>
+		<meta property="og:image" content="https://railclock.matteason.co.uk/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Rail Clock">
+    <meta property="og:title" content="Rail Clock">
+    <meta property="og:description" content="A reproduction of the Great British Railways clock">
+    <meta name="description" content="A reproduction of the Great British Railways clock">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rail Clock">
+    <meta name="twitter:image" content="https://railclock.matteason.co.uk/og.png">
+		<style>
+			@font-face {
+		    font-family: railnumbers;
+		    src: url('railnumbers.woff2') format('woff2');
+		    font-weight: normal;
+		    font-style: normal;
+			}
+
+			body {
+				margin: 0;
+				padding: 0;
+				background: #000;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100vw;
+				height: 100vh;
+				overflow: hidden;
+			}
+
+			#clock {
+				width: 100vmin;
+				height: 100vmin;
+				aspect-ratio: 1;
+				position: relative;
+			}
+
+			#rings {
+				color: #e60000;
+			}
+
+			.arrow {
+				transform-origin: center;
+			}
+
+			#time {
+				color: #fff;
+				font-family: railnumbers;
+				position: absolute;
+				inset: 0;
+				width: 100%;
+				height: 100%;
+				text-align: center;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 22.5vmin;
+				line-height: 1em;
+				gap: 1vmin;
+			}
+
+			#colon {
+				transform: translateY(0.5vmin);
+				font-size: 1.1em;
+			}
+
+			#hours,
+			#minutes {
+				padding-top: 4vmin;
+			}
+
+			#hours {
+				text-align: right;
+			}
+
+			#minutes {
+				text-align: left;
+			}
+		</style>
+		<script>
+		  var _paq = window._paq = window._paq || [];
+		  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		  _paq.push(['trackPageView']);
+		  _paq.push(['enableLinkTracking']);
+		  (function() {
+		    var u="//ambiph.one/analytics/";
+		    _paq.push(['setTrackerUrl', u+'matomo.php']);
+		    _paq.push(['setSiteId', '11']);
+		    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+		    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+		  })();
+		</script>
+	</head>
+	<body>
+		<div id="clock">
+			<div id="time">
+				<div id="hours">20</div>
+				<div id="colon">:</div>
+				<div id="minutes">25</div>
+			</div>
+			<svg id="rings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+			  <g id="outer" class="arrow">
+			    <polygon id="outer-arrow" points="422.45 119.93 469.61 119.93 576.85 69.46 553.98 58.03 481.86 21.97 427.44 21.97 530.79 68.94 422.45 119.93" fill="currentcolor" stroke-width="0"/>
+			    <circle id="outer-rotation-guide" cx="500" cy="500" r="500" fill="none" stroke-width="0"/>
+			  </g>
+			  <circle id="outer-ring" cx="500" cy="500" r="431" fill="none" stroke="currentcolor" stroke-miterlimit="10" stroke-width="21.77"/>
+			  <g id="inner" class="arrow">
+			    <polygon id="inner-arrow" points="577.55 69.13 530.39 69.13 423.15 119.6 446.02 131.03 518.14 167.09 572.56 167.09 469.21 120.11 577.55 69.13" fill="currentcolor" stroke-width="0"/>
+			    <circle id="inner-rotation-guide" cx="500" cy="500" r="500" fill="none" stroke-width="0"/>
+			  </g>
+			  <circle id="inner-ring" cx="500" cy="500" r="380" fill="none" stroke="currentcolor" stroke-miterlimit="10" stroke-width="21.77"/>
+			</svg>
+		</div>
+		<script>
+			const outerRing = document.querySelector('#outer');
+			const innerRing = document.querySelector('#inner');
+			const hours = document.querySelector('#hours');
+			const minutes = document.querySelector('#minutes');
+
+			function update() {
+				const now = new Date();
+
+				hours.innerText = now.getHours().toString().padStart(2,'0');
+				minutes.innerText = now.getMinutes().toString().padStart(2,'0');
+
+				const rot = (now.getSeconds() * 1000 + now.getMilliseconds()) / 60000 * 360;
+				outerRing.style.transform = `rotate(${rot}deg)`;
+				innerRing.style.transform = `rotate(-${rot}deg)`;
+
+				requestAnimationFrame(update);
+			}
+
+			update();
+		</script>
+	</body>
+</html>

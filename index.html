@@ -52,28 +52,38 @@
 			}
 
 			#time {
-				color: #fff;
-				font-family: railnumbers;
 				position: absolute;
 				inset: 0;
 				width: 100%;
 				height: 100%;
-				text-align: center;
 				display: flex;
 				align-items: center;
+				justify-content: center;
+			}
+
+			#numbers {
+				color: #fff;
+				font-family: railnumbers;
+				display: flex;
+				align-items: baseline;
 				justify-content: center;
 				font-size: 22.5vmin;
 				line-height: 1em;
 				-webkit-text-stroke: 0.3vmin #000;
 			}
 
+			#numbers:has(#seconds:not([hidden])) {
+				font-size: 17vmin;
+			}
+
 			#colon {
-				transform: translateY(0.5vmin);
+				transform: translateY(-0.04em);
 				font-size: 1.1em;
 			}
 
 			#hours,
-			#minutes {
+			#minutes,
+			#seconds {
 				padding-top: 4vmin;
 				transform: scaleX(0.91);
 			}
@@ -84,6 +94,12 @@
 
 			#minutes {
 				text-align: left;
+			}
+
+			#seconds {
+				font-size: 0.75em;
+				width: 1em;
+				-webkit-text-stroke: 0.225vmin #000;
 			}
 		</style>
 		<script>
@@ -103,9 +119,12 @@
 	<body>
 		<div id="clock">
 			<div id="time">
-				<div id="hours">20</div>
-				<div id="colon">:</div>
-				<div id="minutes">25</div>
+				<div id="numbers">
+					<div id="hours"></div>
+					<div id="colon">:</div>
+					<div id="minutes"></div>
+					<div id="seconds" hidden></div>
+				</div>
 			</div>
 			<svg id="rings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
 			  <g id="outer" class="arrow">
@@ -125,12 +144,18 @@
 			const innerRing = document.querySelector('#inner');
 			const hours = document.querySelector('#hours');
 			const minutes = document.querySelector('#minutes');
+			const seconds = document.querySelector('#seconds');
+
+			if(window.location.hash.replace('#','') === 'seconds') {
+				seconds.removeAttribute('hidden');
+			}
 
 			function update() {
 				const now = new Date();
 
 				hours.innerText = now.getHours().toString().padStart(2,'0');
 				minutes.innerText = now.getMinutes().toString().padStart(2,'0');
+				seconds.innerText = now.getSeconds().toString().padStart(2,'0');
 
 				const rot = (now.getSeconds() * 1000 + now.getMilliseconds()) / 60000 * 360;
 				outerRing.style.transform = `rotate(${rot}deg)`;

@@ -72,6 +72,10 @@
 				-webkit-text-stroke: 0.3dvmin #000;
 			}
 
+			#numbers[hidden] {
+				display: none;
+			}
+
 			#numbers:has(#seconds:not([hidden])) {
 				font-size: 17dvmin;
 			}
@@ -142,12 +146,24 @@
 		<script>
 			const outerRing = document.querySelector('#outer');
 			const innerRing = document.querySelector('#inner');
+			const numbers = document.querySelector('#numbers');
 			const hours = document.querySelector('#hours');
 			const minutes = document.querySelector('#minutes');
 			const seconds = document.querySelector('#seconds');
 
-			if(window.location.hash.replace('#','') === 'seconds') {
-				seconds.removeAttribute('hidden');
+			const options = window.location.hash.replace('#','').split(',')
+			let analogue = false;
+
+			if(options.includes('seconds')) {
+				seconds.hidden = false;
+			}
+
+			if(options.includes('analogue')) {
+				analogue = true;
+			}
+
+			if(options.includes('hidedigits')) {
+				numbers.hidden = true;
 			}
 
 			function update() {
@@ -157,9 +173,17 @@
 				minutes.innerText = now.getMinutes().toString().padStart(2,'0');
 				seconds.innerText = now.getSeconds().toString().padStart(2,'0');
 
-				const rot = (now.getSeconds() * 1000 + now.getMilliseconds()) / 60000 * 360;
-				outerRing.style.transform = `rotate(${rot}deg)`;
-				innerRing.style.transform = `rotate(${rot * ([0,12].includes(now.getHours()) && now.getMinutes() === 0 ? 1 : -1)}deg)`;
+				if(analogue) {
+					const hoursRot = (((now.getHours() % 12) * 3600000 + now.getMinutes() * 60000 + now.getSeconds() * 1000 + now.getMilliseconds())) / (3600000 * 12) * 360;
+					const minutesRot = ((now.getMinutes() * 60000 + now.getSeconds() * 1000 + now.getMilliseconds())) / 3600000 * 360
+
+					outerRing.style.transform = `rotate(${minutesRot}deg)`;
+					innerRing.style.transform = `rotate(${hoursRot}deg)`;
+				} else {
+					const rot = (now.getSeconds() * 1000 + now.getMilliseconds()) / 60000 * 360;
+					outerRing.style.transform = `rotate(${rot}deg)`;
+					innerRing.style.transform = `rotate(${rot * ([0,12].includes(now.getHours()) && now.getMinutes() === 0 ? 1 : -1)}deg)`;
+			}
 
 				requestAnimationFrame(update);
 			}

@@ -159,7 +159,7 @@
 
 				const rot = (now.getSeconds() * 1000 + now.getMilliseconds()) / 60000 * 360;
 				outerRing.style.transform = `rotate(${rot}deg)`;
-				innerRing.style.transform = `rotate(-${rot}deg)`;
+				innerRing.style.transform = `rotate(${rot * ([0,12].includes(now.getHours()) && now.getMinutes() === 0 ? 1 : -1)}deg)`;
 
 				requestAnimationFrame(update);
 			}

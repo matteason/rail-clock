@@ -13,5 +13,6 @@ There are a few options available via the URL:
 - https://railclock.matteason.co.uk/#seconds to show seconds
 - https://railclock.matteason.co.uk/#analogue to treat the arrows as hour and minute hands rather than rotating once a minute
 - https://railclock.matteason.co.uk/#hidedigits to hide the digits and just show the arrows
-- https://railclock.matteason.co.uk/#analogue,hidedigits for analogue hands and digital seconds
+- https://railclock.matteason.co.uk/#analogue,seconds for analogue hands and digital seconds
+- - https://railclock.matteason.co.uk/#analogue,hidedigits for analogue hands and no digits
 
